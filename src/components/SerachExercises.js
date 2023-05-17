@@ -1,13 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import {exersiseOption, fetchData, URL} from '../utils/fetchData'
+import HorizontalScrollbar from "./HorizontalScrollbar";
 
 
 
 const SerachExercises = () => {
     const [search, setSearch] = useState('');
     const [exercises, setExercises] = useState([]);
+    const [bodyParts, setBodyParts] = useState([]);
 
+    useEffect(()=>{
+      const fetchExercisesData = async() =>{
+        const res = await fetch(URL+"/bodyPartList",exersiseOption); 
+        const bodyPartData = await res.json();
+        // console.log(bodyPartData);
+
+        setBodyParts(['All', ...bodyPartData])
+      }
+      fetchExercisesData()
+    },[])
+
+    console.log(bodyParts);
     
 
     const handleSearch = async() => {
@@ -71,6 +85,9 @@ const SerachExercises = () => {
         onClick={handleSearch}>
             Search
         </Button>
+      </Box>
+      <Box sx={{position:'relative', width: '100%', p:'20px'}}>
+          <HorizontalScrollbar data={bodyParts}/>
       </Box>
     </Stack>
   );
